@@ -1,56 +1,103 @@
-# Welcome to your Expo app 👋
+# Wondrx Field Log Queue
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A lightweight Expo + React Native application for capturing field service logs in an offline-first workflow. It lets users add customer logs, keeps them in a local queue when the device is offline, and retries sync when connectivity is restored.
 
-## Get started
+## Project overview
 
-1. Install dependencies
+This app is designed to simulate a real-world field operations workflow:
+
+- Add a customer name and notes for a service visit
+- Save entries locally immediately
+- Show pending and failed sync states in the UI
+- Automatically flush queued logs when online again
+- Allow manual retry for failed entries
+- Support a forced offline mode for testing edge cases
+
+The project uses Expo SDK 57 with React Native 0.86 and TypeScript.
+
+## Tech stack
+
+- Expo
+- React Native
+- Expo Router
+- TypeScript
+- AsyncStorage
+- NetInfo
+- UUID
+
+## Prerequisites
+
+Before running the app, make sure you have:
+
+- Node.js 20 LTS or newer
+- npm
+- Expo CLI available via the project dependencies
+- An Android emulator, iOS simulator, or the Expo Go app installed on a device
+
+## Setup instructions
+
+1. Open a terminal in the project folder.
+2. Install dependencies:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+3. Start the app:
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+4. In the terminal output, choose one of the available launch options:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   - Press `a` to open in Android
+   - Press `i` to open in iOS simulator
+   - Press `w` to open in a web browser
+   - Scan the QR code with the Expo Go app on a mobile device
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Useful scripts
 
 ```bash
-npm run reset-project
+npm run start
+npm run android
+npm run ios
+npm run web
+npm run lint
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## App behavior
 
-### Other setup steps
+- Logs are stored using `AsyncStorage` so they persist across app restarts.
+- When the app detects the device is offline, new entries stay in the local queue.
+- When connectivity returns, queued items are submitted in order.
+- Failed submissions are marked and can be retried manually.
+- The `Force Offline` toggle helps simulate offline conditions during testing.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Project structure
 
-## Learn more
+```text
+src/
+  app/
+    _layout.tsx
+    index.tsx
+  components/
+    logRow.tsx
+    statusBadge.tsx
+  data/
+    mock-data.ts
+  hooks/
+    useLogQueue.ts
+  services/
+    mock-api.ts
+  storage/
+    log-store.ts
+  types/
+    field-logs.ts
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Notes
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Seeded mock logs are loaded when storage is empty.
+- The app is intentionally built as an offline-first example and is useful for testing queueing and retry behavior.
+- If you want a clean start for local testing, remove the stored AsyncStorage data or clear the app state before re-running the app.
